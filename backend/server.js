@@ -24,7 +24,6 @@ const app = express();
 // Middleware
 app.use(compression());
 app.use(helmet());
-app.use(cors());
 app.use(express.json());
 
 // Security headers
@@ -43,6 +42,27 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// Define allowed origins from environment and localhost
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173" // Adjust port if needed
+];
+
+// CORS configuration for all environments
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
@@ -55,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
   // Enable compression
   app.use(compression());
   
-  // Enhanced security headers
+  // Enhanced security headers with dynamic connectSrc
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
@@ -63,18 +83,10 @@ if (process.env.NODE_ENV === 'production') {
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "https://your-production-domain.com"]
+        connectSrc: ["'self'", process.env.FRONTEND_URL, "http://localhost:5173"]
       }
     },
     crossOriginEmbedderPolicy: false
-  }));
-
-  // CORS configuration for production
-  app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'https://your-production-domain.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
   }));
 
   // Serve static files
@@ -99,14 +111,10 @@ const connectDB = async () => {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
     
-    await mongoose.connect(process.env.MONGODB_URI, {
-      // Remove deprecated options
-      // useNewUrlParser and useUnifiedTopology are no longer needed
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB connected successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    // Log more details about the error
     if (error.code === 'ECONNREFUSED') {
       console.error('Could not connect to MongoDB. Please check if:');
       console.error('1. Your MongoDB connection string is correct');
@@ -124,7 +132,7 @@ const startServer = async () => {
     
     const PORT = process.env.PORT || 5000;
     
-    // Check if port is in use
+    // Start server
     const server = app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
