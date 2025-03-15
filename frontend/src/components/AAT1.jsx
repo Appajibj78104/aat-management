@@ -12,7 +12,7 @@ const AAT1 = () => {
 
   const fetchAAT1 = async () => {
     try {
-      const res = await axios.get("/api/student/aat1", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/aat1`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setAAT1(res.data);
@@ -25,27 +25,28 @@ const AAT1 = () => {
   const handleUpload = async (aat1Id) => {
     try {
       if (!certificate.trim()) {
-        setError("Please enter a  google drive URL for the certificate");
+        setError("Please enter a Google Drive URL for the certificate");
         return;
       }
 
       await axios.post(
-        "/api/student/aat1/upload",
+        `${import.meta.env.VITE_API_URL}/api/student/aat1/upload`,
         {
           aat1Id,
-          certificate: certificate.trim()
+          certificate: certificate.trim(),
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
       alert("Certificate uploaded successfully");
       setCertificate("");
       fetchAAT1();
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to upload certificate";
+      const errorMessage =
+        error.response?.data?.message || "Failed to upload certificate";
       setError(errorMessage);
       console.error("Error uploading certificate:", error);
     }
@@ -61,8 +62,13 @@ const AAT1 = () => {
       )}
       <div className="space-y-6">
         {aat1.map((aat) => (
-          <div key={aat._id} className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">{aat.courseLink}</h3>
+          <div
+            key={aat._id}
+            className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200"
+          >
+            <h3 className="text-xl font-bold text-gray-800 mb-3">
+              {aat.courseLink}
+            </h3>
             <p className="text-gray-600 mb-4">
               <span className="font-medium">Deadline:</span>{" "}
               {new Date(aat.deadline).toLocaleString()}

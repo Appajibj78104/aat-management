@@ -11,9 +11,12 @@ const Statistics = () => {
 
   const fetchStatistics = async () => {
     try {
-      const res = await axios.get("/api/student/statistics", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/student/statistics`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setStatistics(res.data);
     } catch (error) {
       setError("Failed to fetch statistics");

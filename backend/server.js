@@ -90,11 +90,11 @@ if (process.env.NODE_ENV === 'production') {
   }));
 
   // Serve static files
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.use(express.static(path.join(__dirname, '../frontend/index.html')));
   
   // Handle client-side routing
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
   });
 }
 
@@ -142,7 +142,7 @@ const startServer = async () => {
         console.error(`Port ${PORT} is already in use. Trying another port...`);
         server.close();
         app.listen(0, () => {
-          console.log(`Server running on port ${server.address().port}`);
+          console.log(`Server running on port ${server.address().process.env.PORT}`);
         });
       } else {
         console.error('Server error:', error);

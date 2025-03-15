@@ -12,9 +12,12 @@ const ViewAAT1Submissions = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const res = await axios.get("/api/faculty/aat1/submissions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/faculty/aat1/submissions`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setSubmissions(res.data);
       setLoading(false);
     } catch (error) {
@@ -27,7 +30,7 @@ const ViewAAT1Submissions = () => {
   const handleGrade = async (submissionId, grade) => {
     try {
       await axios.post(
-        `/api/faculty/aat1/grade/${submissionId}`,
+        `${import.meta.env.VITE_API_URL}/api/faculty/aat1/grade/${submissionId}`,
         { grade },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -129,4 +132,4 @@ const ViewAAT1Submissions = () => {
   );
 };
 
-export default ViewAAT1Submissions; 
+export default ViewAAT1Submissions;

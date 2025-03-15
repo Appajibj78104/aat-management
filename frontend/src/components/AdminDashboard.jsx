@@ -31,9 +31,12 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/admin/users", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/admin/users`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setUsers({
         students: res.data.filter(user => user.role === "student"),
         faculty: res.data.filter(user => user.role === "faculty")
@@ -45,9 +48,12 @@ const AdminDashboard = () => {
 
   const fetchAAT1Submissions = async () => {
     try {
-      const res = await axios.get("/api/admin/aat1-submissions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/admin/aat1-submissions`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setAAT1Submissions(res.data);
     } catch (error) {
       console.error("Error fetching AAT1 submissions:", error);
@@ -56,9 +62,12 @@ const AdminDashboard = () => {
 
   const fetchAAT2Submissions = async () => {
     try {
-      const res = await axios.get("/api/admin/aat2-submissions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/admin/aat2-submissions`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setAAT2Submissions(res.data);
     } catch (error) {
       console.error("Error fetching AAT2 submissions:", error);
@@ -67,9 +76,12 @@ const AdminDashboard = () => {
 
   const fetchRemedialSessions = async () => {
     try {
-      const res = await axios.get("/api/admin/remedial-sessions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/admin/remedial-sessions`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setRemedialSessions(res.data);
     } catch (error) {
       console.error("Error fetching remedial sessions:", error);
@@ -85,7 +97,12 @@ const AdminDashboard = () => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Admin Dashboard</h2>
-      <button onClick={handleLogout} className="text-white px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 transition-all duration-200">Logout</button>
+      <button
+        onClick={handleLogout}
+        className="text-white px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 transition-all duration-200"
+      >
+        Logout
+      </button>
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-md mb-6">
           {error}

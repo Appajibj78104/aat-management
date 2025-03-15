@@ -11,9 +11,12 @@ const ViewStudents = () => {
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get("/api/faculty/students", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/faculty/students`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setStudents(res.data);
     } catch (error) {
       setError("Failed to fetch students");

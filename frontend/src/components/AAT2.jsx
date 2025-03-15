@@ -12,9 +12,12 @@ const AAT2 = () => {
 
   const fetchAAT2 = async () => {
     try {
-      const res = await axios.get("/api/student/aat2", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/student/aat2`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setAAT2(res.data);
     } catch (error) {
       setError("Failed to fetch AAT2");
@@ -25,7 +28,7 @@ const AAT2 = () => {
   const handleSubmit = async (aat2Id) => {
     try {
       const res = await axios.post(
-        "/api/student/aat2/submit",
+        `${import.meta.env.VITE_API_URL}/api/student/aat2/submit`,
         { aat2Id, answers },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -48,11 +51,20 @@ const AAT2 = () => {
       )}
       <div className="space-y-6">
         {aat2.map((aat) => (
-          <div key={aat._id} className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200">
+          <div
+            key={aat._id}
+            className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200"
+          >
             <h3 className="text-xl font-bold text-gray-800 mb-3">{aat.title}</h3>
             <div className="space-y-2 mb-4 text-gray-600">
-              <p><span className="font-medium">Start Time:</span> {new Date(aat.startTime).toLocaleString()}</p>
-              <p><span className="font-medium">End Time:</span> {new Date(aat.endTime).toLocaleString()}</p>
+              <p>
+                <span className="font-medium">Start Time:</span>{" "}
+                {new Date(aat.startTime).toLocaleString()}
+              </p>
+              <p>
+                <span className="font-medium">End Time:</span>{" "}
+                {new Date(aat.endTime).toLocaleString()}
+              </p>
             </div>
             {aat.submitted ? (
               <div className="bg-green-50 text-green-700 p-4 rounded-md">
@@ -66,7 +78,10 @@ const AAT2 = () => {
                     {question.type === "mcq" && (
                       <div className="space-y-2">
                         {question.options.map((option, optionIndex) => (
-                          <label key={optionIndex} className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
+                          <label
+                            key={optionIndex}
+                            className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer"
+                          >
                             <input
                               type="radio"
                               name={`question-${index}`}

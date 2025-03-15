@@ -11,9 +11,12 @@ const RemedialSessions = () => {
 
   const fetchSessions = async () => {
     try {
-      const res = await axios.get("/api/student/remedial-sessions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/student/remedial-sessions`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setSessions(res.data);
     } catch (error) {
       setError("Failed to fetch remedial sessions");

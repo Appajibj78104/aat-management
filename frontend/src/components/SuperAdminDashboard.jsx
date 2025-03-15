@@ -21,9 +21,12 @@ const SuperadminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/superadmin/users", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/superadmin/users`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setUsers(res.data);
     } catch (error) {
       setError("Failed to fetch users");
@@ -34,7 +37,7 @@ const SuperadminDashboard = () => {
   const handleWhitelistEmail = async () => {
     try {
       await axios.post(
-        "/api/superadmin/whitelist",
+        `${import.meta.env.VITE_API_URL}/api/superadmin/whitelist`,
         { email },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -48,9 +51,12 @@ const SuperadminDashboard = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`/api/superadmin/users/${userId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/superadmin/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       alert("User deleted successfully");
       fetchUsers(); // Refresh the list
     } catch (error) {
@@ -62,7 +68,7 @@ const SuperadminDashboard = () => {
   const handleEdit = async (userId, newRole) => {
     try {
       await axios.put(
-        `/api/superadmin/users/${userId}/role`,
+        `${import.meta.env.VITE_API_URL}/api/superadmin/users/${userId}/role`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -78,11 +84,14 @@ const SuperadminDashboard = () => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Superadmin Dashboard</h2>
-      <button onClick={handleLogout} className="text-white px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 transition-all duration-200">Logout</button>
+      <button
+        onClick={handleLogout}
+        className="text-white px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 transition-all duration-200"
+      >
+        Logout
+      </button>
       {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-md mb-6">
-          {error}
-        </div>
+        <div className="bg-red-50 text-red-600 p-4 rounded-md mb-6">{error}</div>
       )}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <h3 className="text-lg font-medium text-gray-700 mb-4">Whitelist Email</h3>
@@ -94,8 +103,8 @@ const SuperadminDashboard = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
           />
-          <button 
-            onClick={handleWhitelistEmail} 
+          <button
+            onClick={handleWhitelistEmail}
             className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
           >
             Whitelist Email
@@ -125,12 +134,8 @@ const SuperadminDashboard = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {users.map((user) => (
                 <tr key={user._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {user.name}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {user.email}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {editingUser === user._id ? (
                       <select
@@ -159,7 +164,7 @@ const SuperadminDashboard = () => {
                       </button>
                       <button
                         onClick={() => {
-                          if (window.confirm('Are you sure you want to delete this user?')) {
+                          if (window.confirm("Are you sure you want to delete this user?")) {
                             handleDelete(user._id);
                           }
                         }}

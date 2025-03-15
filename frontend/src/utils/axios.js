@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const baseURL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-production-domain.com/api'  // Update this with your actual production domain
+  ? 'https://eduease.onrender.com'  // Update this with your actual production domain
   : 'http://localhost:5000/api';
 
 const instance = axios.create({
