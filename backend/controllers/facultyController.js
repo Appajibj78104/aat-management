@@ -8,32 +8,50 @@ import StudentAAT1 from "../models/StudentAAT1.js";
 // Create AAT1
 export const createAAT1 = async (req, res) => {
   const { courseLink, deadline } = req.body;
-  const facultyId = req.user.id;
+  // Use optional chaining in case req.user isn't set
+  const facultyId = req.user?.id;
+
+  if (!facultyId) {
+    console.error("Faculty ID is missing from req.user. Check your authentication middleware.");
+    return res.status(400).json({ message: "Faculty ID missing. Authentication failed." });
+  }
 
   try {
     const aat1 = await AAT1.create({ courseLink, deadline, facultyId });
     res.status(201).json(aat1);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create AAT1" });
+    console.error("Error in createAAT1:", error);
+    res.status(500).json({ message: "Failed to create AAT1", error: error.message });
   }
 };
 
 export const createAAT2 = async (req, res) => {
-    const { title, questions, startTime, endTime, duration } = req.body;
-    const facultyId = req.user.id;
+  const { title, questions, startTime, endTime, duration } = req.body;
+  const facultyId = req.user?.id;
+
+  if (!facultyId) {
+    console.error("Faculty ID is missing from req.user in createAAT2.");
+    return res.status(400).json({ message: "Faculty ID missing. Authentication failed." });
+  }
   
-    try {
-      const aat2 = await AAT2.create({ title, questions, startTime, endTime, duration, facultyId });
-      res.status(201).json(aat2);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create AAT2" });
-    }
-  };
+  try {
+    const aat2 = await AAT2.create({ title, questions, startTime, endTime, duration, facultyId });
+    res.status(201).json(aat2);
+  } catch (error) {
+    console.error("Error in createAAT2:", error);
+    res.status(500).json({ message: "Failed to create AAT2", error: error.message });
+  }
+};
 
 // Create Remedial Session
 export const createRemedialSession = async (req, res) => {
   const { title, description, startTime, endTime, duration, link, students } = req.body;
-  const facultyId = req.user.id;
+  const facultyId = req.user?.id;
+
+  if (!facultyId) {
+    console.error("Faculty ID is missing from req.user in createRemedialSession.");
+    return res.status(400).json({ message: "Faculty ID missing. Authentication failed." });
+  }
 
   try {
     const remedialSession = await RemedialSession.create({
@@ -59,7 +77,8 @@ export const createRemedialSession = async (req, res) => {
 
     res.status(201).json(remedialSession);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create remedial session" });
+    console.error("Error in createRemedialSession:", error);
+    res.status(500).json({ message: "Failed to create remedial session", error: error.message });
   }
 };
 
@@ -69,6 +88,7 @@ export const viewStudents = async (req, res) => {
     const students = await User.find({ role: "student" }).select("-password");
     res.status(200).json(students);
   } catch (error) {
+    console.error("Error fetching students:", error);
     res.status(500).json({ message: "Failed to fetch students" });
   }
 };
@@ -83,8 +103,8 @@ export const getAAT1Submissions = async (req, res) => {
 
     const formattedSubmissions = submissions.map(sub => ({
       _id: sub._id,
-      studentName: sub.studentId.name,
-      courseTitle: sub.aat1Id.courseLink,
+      studentName: sub.studentId?.name || "Unknown",
+      courseTitle: sub.aat1Id?.courseLink || "Unknown",
       certificate: sub.certificate,
       grade: sub.grade,
       submittedAt: sub.createdAt
@@ -93,7 +113,7 @@ export const getAAT1Submissions = async (req, res) => {
     res.status(200).json(formattedSubmissions);
   } catch (error) {
     console.error("Error fetching AAT1 submissions:", error);
-    res.status(500).json({ message: "Failed to fetch submissions" });
+    res.status(500).json({ message: "Failed to fetch submissions", error: error.message });
   }
 };
 
@@ -114,6 +134,6 @@ export const gradeAAT1Submission = async (req, res) => {
     res.status(200).json({ message: "Grade updated successfully" });
   } catch (error) {
     console.error("Error updating grade:", error);
-    res.status(500).json({ message: "Failed to update grade" });
+    res.status(500).json({ message: "Failed to update grade", error: error.message });
   }
 };

@@ -32,7 +32,7 @@ const CreateAAT2 = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "/api/faculty/aat2",
+        `${import.meta.env.VITE_API_URL}/api/faculty/aat2`,
         { title, questions, startTime, endTime, duration },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );

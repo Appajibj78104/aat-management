@@ -10,7 +10,7 @@ const CreateAAT1 = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "/api/faculty/aat1",
+        `${import.meta.env.VITE_API_URL}/api/faculty/aat1`,
         { courseLink, deadline },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );

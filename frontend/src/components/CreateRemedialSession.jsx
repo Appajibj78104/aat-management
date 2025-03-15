@@ -15,7 +15,7 @@ const CreateRemedialSession = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "/api/faculty/remedial-session",
+        `${import.meta.env.VITE_API_URL}/api/faculty/remedial-session`,
         { title, description, startTime, endTime, duration, link, students },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
