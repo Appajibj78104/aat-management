@@ -90,11 +90,11 @@ if (process.env.NODE_ENV === 'production') {
   }));
 
   // Serve static files
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.use(express.static(path.join(__dirname, '../frontend')));
   
   // Handle client-side routing
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
   });
 }
 
