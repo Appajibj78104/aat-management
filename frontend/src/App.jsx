@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import SuperadminDashboard from "./components/SuperadminDashboard";
+import SuperadminDashboard from "./components/SuperAdminDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import FacultyDashboard from "./components/FacultyDashboard";
 import CreateAAT1 from "./components/CreateAAT1";
